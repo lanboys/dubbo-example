@@ -9,7 +9,7 @@ import org.apache.dubbo.demo.DemoService;
 
 import java.util.concurrent.CountDownLatch;
 
-public class Application {
+public class ApiProviderApplication {
 
   public static void main(String[] args) throws Exception {
     if (isClassic(args)) {
