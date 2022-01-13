@@ -12,12 +12,13 @@
     <description>The demo module of dubbo project</description>
 
     <properties>
-        <revision>2.7.7</revision>
+        <revision>2.6.5</revision>
         <java.version>8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <curator.version>4.0.1</curator.version>
         <zookeeper.version>3.4.11</zookeeper.version>
+        <netty.version>4.1.25.Final</netty.version>
     </properties>
 
     <modules>
@@ -29,9 +30,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.dubbo</groupId>
+            <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.netty</groupId>
+                    <artifactId>netty</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- dubbo 内部有的地方用的是4.x版本，所以统一用这个版本 -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>

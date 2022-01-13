@@ -1,10 +1,11 @@
-
 package org.apache.dubbo.demo.provider;
 
-import org.apache.dubbo.config.ApplicationConfig;
-import org.apache.dubbo.config.RegistryConfig;
-import org.apache.dubbo.config.ServiceConfig;
-import org.apache.dubbo.config.bootstrap.DubboBootstrap;
+import com.alibaba.dubbo.config.ApplicationConfig;
+import com.alibaba.dubbo.config.ProviderConfig;
+import com.alibaba.dubbo.config.RegistryConfig;
+import com.alibaba.dubbo.config.ServiceConfig;
+
+import org.apache.dubbo.bootstrap.DubboBootstrap;
 import org.apache.dubbo.demo.DemoService;
 
 import java.util.concurrent.CountDownLatch;
@@ -12,11 +13,11 @@ import java.util.concurrent.CountDownLatch;
 public class ApiProviderApplication {
 
   public static void main(String[] args) throws Exception {
-    if (isClassic(args)) {
-      startWithExport();
-    } else {
-      startWithBootstrap();
-    }
+    //if (isClassic(args)) {
+    startWithExport();
+    //} else {
+    //  startWithBootstrap();
+    //}
   }
 
   private static boolean isClassic(String[] args) {
@@ -27,13 +28,10 @@ public class ApiProviderApplication {
     ServiceConfig<DemoServiceImpl> service = new ServiceConfig<>();
     service.setInterface(DemoService.class);
     service.setRef(new DemoServiceImpl());
+    service.setApplication(new ApplicationConfig("dubbo-demo-api-provider"));
+    service.setRegistry(new RegistryConfig("zookeeper://127.0.0.1:2181"));
 
-    DubboBootstrap bootstrap = DubboBootstrap.getInstance();
-    bootstrap.application(new ApplicationConfig("dubbo-demo-api-provider"))
-        .registry(new RegistryConfig("zookeeper://127.0.0.1:2181"))
-        .service(service)
-        .start()
-        .await();
+    new DubboBootstrap().registerServiceConfig(service).start();
   }
 
   private static void startWithExport() throws InterruptedException {
@@ -42,6 +40,10 @@ public class ApiProviderApplication {
     service.setRef(new DemoServiceImpl());
     service.setApplication(new ApplicationConfig("dubbo-demo-api-provider"));
     service.setRegistry(new RegistryConfig("zookeeper://127.0.0.1:2181"));
+    ProviderConfig providerConfig = new ProviderConfig();
+    providerConfig.setServer("netty4");
+    //providerConfig.setTransporter("netty4");
+    service.setProvider(providerConfig);
     service.export();
 
     System.out.println("dubbo service started");

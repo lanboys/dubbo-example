@@ -7,6 +7,8 @@
 
     <dubbo:application name="demo-consumer"/>
 
+    <dubbo:consumer client="netty4"/>
+
     <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
 
     <dubbo:reference id="demoService" check="false" interface="org.apache.dubbo.demo.DemoService"/>
